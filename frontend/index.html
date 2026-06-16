@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ARIA — Marketing AI Platform</title>
+<meta name="description" content="ARIA is an AI-powered marketing automation platform for generating content, analyzing leads, running ads, and chatting with an expert AI agent."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/static/css/style.css"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+</head>
+<body>
+
+<!-- ── Sidebar ── -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">⚡</div>
+    <span class="logo-text">ARIA</span>
+    <span class="logo-badge">AI</span>
+  </div>
+  <nav class="sidebar-nav">
+    <a class="nav-item active" data-page="dashboard" onclick="showPage('dashboard',this)">
+      <span class="nav-icon">📊</span><span class="nav-label">Dashboard</span>
+    </a>
+    <a class="nav-item" data-page="content" onclick="showPage('content',this)">
+      <span class="nav-icon">✍️</span><span class="nav-label">Content Studio</span>
+    </a>
+    <a class="nav-item" data-page="leads" onclick="showPage('leads',this)">
+      <span class="nav-icon">👥</span><span class="nav-label">Leads</span>
+    </a>
+    <a class="nav-item" data-page="campaigns" onclick="showPage('campaigns',this)">
+      <span class="nav-icon">🎯</span><span class="nav-label">Campaigns</span>
+    </a>
+    <a class="nav-item" data-page="ads" onclick="showPage('ads',this)">
+      <span class="nav-icon">📣</span><span class="nav-label">Ad Creatives</span>
+    </a>
+    <a class="nav-item" data-page="chat" onclick="showPage('chat',this)">
+      <span class="nav-icon">🤖</span><span class="nav-label">ARIA Chat</span>
+      <span class="nav-badge">AI</span>
+    </a>
+    <a class="nav-item" data-page="stocks" onclick="showPage('stocks',this)">
+      <span class="nav-icon">📈</span><span class="nav-label">Stocks & Trading</span>
+      <span class="nav-badge" style="background:var(--green)">LIVE</span>
+    </a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="agent-status">
+      <div class="status-dot"></div>
+      <span>AI Agents Online</span>
+    </div>
+  </div>
+</aside>
+
+<!-- ── Main ── -->
+<main class="main">
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <h1 class="topbar-title" id="page-title">Dashboard</h1>
+      <span class="topbar-sub" id="page-sub">Marketing intelligence overview</span>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-time" id="topbar-time"></div>
+      <div class="health-badge" id="health-badge" onclick="checkHealth()">⚡ Checking...</div>
+    </div>
+  </header>
+
+  <!-- ══ PAGE: DASHBOARD ══ -->
+  <section class="page active" id="page-dashboard">
+    <div class="kpi-grid" id="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-icon">🌐</div>
+        <div class="kpi-value" id="kpi-realtime">1,204</div>
+        <div class="kpi-label">Real-Time Users</div>
+        <div class="kpi-trend up" id="kpi-realtime-trend">Active Now</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">👥</div>
+        <div class="kpi-value" id="kpi-leads">—</div>
+        <div class="kpi-label">Total Leads</div>
+        <div class="kpi-trend up">+12% this week</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">🎯</div>
+        <div class="kpi-value" id="kpi-campaigns">—</div>
+        <div class="kpi-label">Active Campaigns</div>
+        <div class="kpi-trend up">All running</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">👁️</div>
+        <div class="kpi-value" id="kpi-impressions">—</div>
+        <div class="kpi-label">Total Impressions</div>
+        <div class="kpi-trend up">+8.4% this month</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">💰</div>
+        <div class="kpi-value" id="kpi-conversions">—</div>
+        <div class="kpi-label">Conversions</div>
+        <div class="kpi-trend up">+24% MTD</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">📈</div>
+        <div class="kpi-value" id="kpi-ctr">—</div>
+        <div class="kpi-label">Click-Through Rate</div>
+        <div class="kpi-trend neutral">Industry avg 2.1%</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">💵</div>
+        <div class="kpi-value" id="kpi-spend">—</div>
+        <div class="kpi-label">Total Spend</div>
+        <div class="kpi-trend down">On budget</div>
+      </div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-card wide">
+        <div class="chart-header">
+          <span class="chart-title">Campaign Performance</span>
+          <span class="chart-sub">Impressions vs Conversions</span>
+        </div>
+        <canvas id="performanceChart" height="110"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header">
+          <span class="chart-title">Channel Mix</span>
+        </div>
+        <canvas id="channelChart" height="160"></canvas>
+      </div>
+    </div>
+
+    <div class="activity-feed">
+      <div class="feed-header">⚡ Live Activity Feed</div>
+      <div class="feed-list" id="feed-list">
+        <div class="feed-item"><span class="feed-icon">🤖</span><span>ARIA generated 3 ad variants for Summer Campaign</span><span class="feed-time">just now</span></div>
+        <div class="feed-item"><span class="feed-icon">👤</span><span>New lead: Priya Sharma scored A (87/100)</span><span class="feed-time">2m ago</span></div>
+        <div class="feed-item"><span class="feed-icon">📧</span><span>Email campaign sent to 1,240 contacts</span><span class="feed-time">15m ago</span></div>
+        <div class="feed-item"><span class="feed-icon">📊</span><span>Google Ads CTR improved to 3.55%</span><span class="feed-time">1h ago</span></div>
+        <div class="feed-item"><span class="feed-icon">✍️</span><span>Blog post generated: "10 Growth Hacks for 2025"</span><span class="feed-time">2h ago</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ PAGE: CONTENT STUDIO ══ -->
+  <section class="page" id="page-content">
+    <div class="studio-layout">
+      <div class="studio-controls glass-card">
+        <h3 class="card-title">⚙️ Content Parameters</h3>
+        <div class="form-group">
+          <label>Content Type</label>
+          <select id="content-type">
+            <option value="social_post">📱 Social Post</option>
+            <option value="blog">📝 Blog Article</option>
+            <option value="email">📧 Email Campaign</option>
+            <option value="ad_copy">🎯 Ad Copy</option>
+            <option value="hashtags">#️⃣ Hashtags</option>
+            <option value="subject_line">✉️ Subject Lines</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Topic / Brief</label>
+          <textarea id="content-topic" rows="3" placeholder="e.g. Launch of our new AI productivity app for startups"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Tone</label>
+          <select id="content-tone">
+            <option value="professional">Professional</option>
+            <option value="casual">Casual</option>
+            <option value="humorous">Humorous</option>
+            <option value="urgent">Urgent</option>
+            <option value="inspirational">Inspirational</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Platform (optional)</label>
+          <select id="content-platform">
+            <option value="">— Any —</option>
+            <option value="instagram">Instagram</option>
+            <option value="twitter">Twitter/X</option>
+            <option value="linkedin">LinkedIn</option>
+            <option value="facebook">Facebook</option>
+            <option value="tiktok">TikTok</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Keywords (comma separated)</label>
+          <input type="text" id="content-keywords" placeholder="AI, growth, productivity"/>
+        </div>
+        <button class="btn-primary" id="generate-btn" onclick="generateContent()">
+          <span id="generate-btn-text">✨ Generate Content</span>
+        </button>
+      </div>
+
+      <div class="studio-output">
+        <div class="glass-card output-card" id="content-output-card" style="display:none">
+          <div class="output-header">
+            <span class="card-title">Generated Content</span>
+            <div class="output-actions">
+              <button class="btn-ghost" onclick="copyContent()">📋 Copy</button>
+              <button class="btn-ghost" onclick="saveContent()">💾 Save</button>
+            </div>
+          </div>
+          <div class="output-body" id="content-output"></div>
+          <div class="output-meta" id="content-meta"></div>
+          <div class="suggestions-section" id="content-suggestions"></div>
+        </div>
+        <div class="output-placeholder" id="content-placeholder">
+          <div class="placeholder-icon">✨</div>
+          <p>Configure parameters and click Generate to create AI-powered marketing content</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ PAGE: LEADS ══ -->
+  <section class="page" id="page-leads">
+    <div class="leads-toolbar">
+      <button class="btn-primary" onclick="openLeadModal()">➕ Add Lead</button>
+      <input type="text" id="leads-search" placeholder="🔍 Search leads..." oninput="filterLeads()" class="search-input"/>
+    </div>
+    <div class="glass-card">
+      <table class="data-table" id="leads-table">
+        <thead>
+          <tr><th>Name</th><th>Company</th><th>Score</th><th>Grade</th><th>Status</th><th>Actions</th></tr>
+        </thead>
+        <tbody id="leads-tbody">
+          <tr><td colspan="6" class="loading-row">Loading leads...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Add Lead Modal -->
+    <div class="modal-overlay" id="lead-modal" style="display:none">
+      <div class="modal glass-card">
+        <div class="modal-header"><h3>Add New Lead</h3><button onclick="closeLeadModal()" class="btn-ghost">✕</button></div>
+        <div class="form-group"><label>Name *</label><input id="lead-name" type="text" placeholder="Full name"/></div>
+        <div class="form-group"><label>Email</label><input id="lead-email" type="email" placeholder="email@company.com"/></div>
+        <div class="form-group"><label>Phone</label><input id="lead-phone" type="tel" placeholder="+91 9876543210"/></div>
+        <div class="form-group"><label>Company</label><input id="lead-company" type="text" placeholder="Company name"/></div>
+        <div class="form-group"><label>Industry</label><input id="lead-industry" type="text" placeholder="e.g. SaaS, E-commerce"/></div>
+        <div class="form-group"><label>Notes</label><textarea id="lead-notes" rows="2" placeholder="Any relevant notes..."></textarea></div>
+        <div class="modal-actions">
+          <button class="btn-ghost" onclick="closeLeadModal()">Cancel</button>
+          <button class="btn-primary" onclick="createLead()">🤖 Add & Score with AI</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Outreach Modal -->
+    <div class="modal-overlay" id="outreach-modal" style="display:none">
+      <div class="modal glass-card">
+        <div class="modal-header"><h3>📨 Generate Outreach</h3><button onclick="document.getElementById('outreach-modal').style.display='none'" class="btn-ghost">✕</button></div>
+        <input type="hidden" id="outreach-lead-name"/>
+        <div class="form-group"><label>Product/Service</label><input id="outreach-product" type="text" placeholder="e.g. AI Marketing Platform"/></div>
+        <div class="form-group"><label>Value Proposition</label><textarea id="outreach-value" rows="2" placeholder="e.g. Automate 80% of your marketing with AI"/></textarea></div>
+        <div class="form-group"><label>Channel</label>
+          <select id="outreach-channel">
+            <option value="email">📧 Email</option>
+            <option value="sms">💬 SMS</option>
+            <option value="whatsapp">📱 WhatsApp</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-ghost" onclick="document.getElementById('outreach-modal').style.display='none'">Cancel</button>
+          <button class="btn-primary" onclick="generateOutreach()">✨ Generate Message</button>
+        </div>
+        <div id="outreach-result" style="display:none" class="output-body mt-1"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ PAGE: CAMPAIGNS ══ -->
+  <section class="page" id="page-campaigns">
+    <div class="leads-toolbar">
+      <button class="btn-primary" onclick="openCampaignModal()">➕ New Campaign</button>
+    </div>
+    <div class="campaign-grid" id="campaign-grid">
+      <div class="loading-row">Loading campaigns...</div>
+    </div>
+
+    <div class="modal-overlay" id="campaign-modal" style="display:none">
+      <div class="modal glass-card">
+        <div class="modal-header"><h3>New Campaign</h3><button onclick="document.getElementById('campaign-modal').style.display='none'" class="btn-ghost">✕</button></div>
+        <div class="form-group"><label>Campaign Name *</label><input id="camp-name" type="text" placeholder="e.g. Summer Email Blast"/></div>
+        <div class="form-group"><label>Channel</label>
+          <select id="camp-channel">
+            <option value="social">📱 Social Media</option>
+            <option value="email">📧 Email</option>
+            <option value="ads">🎯 Paid Ads</option>
+            <option value="sms">💬 SMS</option>
+            <option value="whatsapp">📱 WhatsApp</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Budget ($)</label><input id="camp-budget" type="number" placeholder="5000"/></div>
+        <div class="form-group"><label>Goal</label><input id="camp-goal" type="text" placeholder="e.g. Generate 500 leads"/></div>
+        <div class="form-group"><label>Target Audience</label><input id="camp-audience" type="text" placeholder="e.g. SaaS founders, 25-45"/></div>
+        <div class="modal-actions">
+          <button class="btn-ghost" onclick="document.getElementById('campaign-modal').style.display='none'">Cancel</button>
+          <button class="btn-primary" onclick="createCampaign()">🚀 Launch Campaign</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ PAGE: ADS ══ -->
+  <section class="page" id="page-ads">
+    <div class="studio-layout">
+      <div class="studio-controls glass-card">
+        <h3 class="card-title">🎨 Ad Creative Generator</h3>
+        <div class="form-group"><label>Product/Service</label><input id="ad-product" type="text" placeholder="e.g. AI Analytics Dashboard"/></div>
+        <div class="form-group"><label>Target Audience</label><input id="ad-audience" type="text" placeholder="e.g. Marketing managers at B2B SaaS companies"/></div>
+        <div class="form-group"><label>Platform</label>
+          <select id="ad-platform">
+            <option value="meta">Meta (FB/IG)</option>
+            <option value="google">Google Ads</option>
+            <option value="linkedin">LinkedIn</option>
+            <option value="tiktok">TikTok</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Objective</label>
+          <select id="ad-objective">
+            <option value="conversions">Conversions</option>
+            <option value="awareness">Brand Awareness</option>
+            <option value="traffic">Website Traffic</option>
+            <option value="leads">Lead Generation</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Number of Variants</label>
+          <select id="ad-variants">
+            <option value="2">2 Variants</option>
+            <option value="3" selected>3 Variants (A/B/C)</option>
+            <option value="4">4 Variants</option>
+          </select>
+        </div>
+        <button class="btn-primary" id="ad-gen-btn" onclick="generateAds()">🎯 Generate Ad Creatives</button>
+      </div>
+      <div class="studio-output" id="ads-output">
+        <div class="output-placeholder">
+          <div class="placeholder-icon">🎨</div>
+          <p>Enter your product details to generate multiple ad creative variants for A/B testing</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ PAGE: CHAT ══ -->
+  <section class="page" id="page-chat">
+    <div class="chat-layout">
+      <div class="chat-container glass-card">
+        <div class="chat-header">
+          <div class="chat-agent-info">
+            <div class="agent-avatar">⚡</div>
+            <div>
+              <div class="agent-name">ARIA</div>
+              <div class="agent-role">Advanced Revenue Intelligence Agent</div>
+            </div>
+          </div>
+          <div class="status-dot"></div>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+          <div class="msg assistant">
+            <div class="msg-avatar">⚡</div>
+            <div class="msg-bubble">
+              <p>Hey! I'm <strong>ARIA</strong> — your AI marketing strategist. I can help you with content strategy, campaign optimization, lead generation, ad creatives, and growth tactics.</p>
+              <p>What marketing challenge can I solve for you today? 🚀</p>
+            </div>
+          </div>
+        </div>
+        <div class="chat-suggestions" id="chat-suggestions">
+          <button class="suggestion-chip" onclick="sendSuggestion(this)">Generate a content strategy</button>
+          <button class="suggestion-chip" onclick="sendSuggestion(this)">How do I improve my CTR?</button>
+          <button class="suggestion-chip" onclick="sendSuggestion(this)">Write a cold email sequence</button>
+        </div>
+        <div class="chat-input-area">
+          <textarea id="chat-input" placeholder="Ask ARIA anything about marketing..." rows="1" onkeydown="handleChatKey(event)"></textarea>
+          <button class="btn-send" id="chat-send-btn" onclick="sendChat()">➤</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ PAGE: STOCKS ══ -->
+  <section class="page" id="page-stocks">
+    <div class="trading-layout">
+      
+      <!-- Chart Area -->
+      <div class="trading-chart-card glass-card">
+        <div class="chart-header" style="display:flex; justify-content:space-between; align-items:center;">
+          <div class="chart-inputs" style="display:flex; gap:10px;">
+            <input id="stock-symbol" type="text" class="search-input" placeholder="Symbol (e.g. AAPL)" value="AAPL" style="width:150px"/>
+            <button class="btn-primary" id="stock-predict-btn" onclick="predictStock()" style="width:auto; padding: .55rem 1rem;">
+              <span id="stock-btn-text">⚡ AI Analysis</span>
+            </button>
+          </div>
+          <span class="chart-sub" id="stock-chart-sub" style="color:var(--text3); font-size:0.9rem">Live Intraday</span>
+        </div>
+        <div id="tvchart" style="width:100%; height:450px; margin-top:1rem;"></div>
+        <div id="stock-prediction-output" class="output-body mt-1" style="display:none; font-size: 0.95rem; margin-top:1rem;"></div>
+      </div>
+
+      <!-- Trading Terminal Area -->
+      <div class="trading-terminal glass-card">
+        <h3 class="card-title">💼 Virtual Portfolio</h3>
+        <div class="portfolio-summary" style="margin-bottom:1.5rem">
+          <div class="port-bal">
+            <span class="lbl" style="color:var(--text2); font-size:0.85rem">USD Balance</span>
+            <div class="val" id="port-usd" style="font-size:1.8rem; font-family:var(--font-heading); color:var(--text)">$---</div>
+          </div>
+        </div>
+        
+        <h3 class="card-title">⚡ Order Entry</h3>
+        <div class="order-form">
+          <div class="form-group">
+            <label>Current Price ($)</label>
+            <input type="number" id="trade-price" class="search-input" style="width:100%" disabled placeholder="Analyze symbol first"/>
+          </div>
+          <div class="form-group" style="margin-top:0.8rem">
+            <label>Quantity (Shares)</label>
+            <input type="number" id="trade-qty" class="search-input" style="width:100%" min="1" value="1"/>
+          </div>
+          <div style="display:flex; gap:10px; margin-top:1rem;">
+            <button class="btn-buy" onclick="executeTrade('BUY')">BUY</button>
+            <button class="btn-sell" onclick="executeTrade('SELL')">SELL</button>
+          </div>
+        </div>
+        
+        <hr style="border-color:var(--border); margin: 1.5rem 0"/>
+        
+        <h3 class="card-title">📊 Holdings</h3>
+        <div id="port-holdings" class="holdings-list">
+          <p style="color:var(--text3); font-size:0.85rem">Loading...</p>
+        </div>
+      </div>
+      
+    </div>
+  </section>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script src="/static/js/api.js"></script>
+<script src="/static/js/charts.js"></script>
+<script src="/static/js/agents.js"></script>
+<script src="/static/js/app.js"></script>
+</body>
+</html>
